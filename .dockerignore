@@ -1,0 +1,12 @@
+.git
+venv
+frontend/node_modules
+frontend/dist
+backend/__pycache__
+backend/**/__pycache__
+backend/memory_db
+backend/vectorstore
+backend/uploads
+backend/reports
+backend/*.db
+*.pyc
