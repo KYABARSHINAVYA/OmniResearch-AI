@@ -30,6 +30,7 @@ async def websocket_chat(websocket: WebSocket):
             await safe_send(websocket, {"agent": "rag", "status": "running"})
             await safe_send(websocket, {"agent": "memory", "status": "running"})
             await safe_send(websocket, {"agent": "graph", "status": "running"})
+            await safe_send(websocket, {"agent": "mcp", "status": "running"})
 
             print("\n========== INVOKING GRAPH ==========\n")
 
@@ -47,6 +48,7 @@ async def websocket_chat(websocket: WebSocket):
                 # ---------------- SUCCESS STATUS ----------------
                 await safe_send(websocket, {"agent": "writer", "status": "completed"})
                 await safe_send(websocket, {"agent": "reviewer", "status": "completed"})
+                await safe_send(websocket, {"agent": "evaluator", "status": "completed"})
 
                 await safe_send(websocket, {
                     "answer": result.get("answer", "No answer returned")
@@ -61,6 +63,7 @@ async def websocket_chat(websocket: WebSocket):
                 try:
                     await safe_send(websocket, {"agent": "writer", "status": "failed"})
                     await safe_send(websocket, {"agent": "reviewer", "status": "failed"})
+                    await safe_send(websocket, {"agent": "evaluator", "status": "failed"})
 
                     await safe_send(websocket, {
                         "answer": f"Graph error: {str(e)}"

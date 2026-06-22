@@ -407,6 +407,11 @@ select {
   background: #dff8eb;
 }
 
+.message.thinking {
+  border: 1px solid #d9e1e8;
+  background: #ffffff;
+}
+
 .message span {
   display: block;
   margin-bottom: 4px;
@@ -419,6 +424,42 @@ select {
 .message p {
   margin: 0;
   white-space: pre-wrap;
+}
+
+.thinking-dots {
+  display: flex;
+  gap: 5px;
+  margin-top: 8px;
+}
+
+.thinking-dots i {
+  width: 7px;
+  height: 7px;
+  border-radius: 999px;
+  background: #5e6b78;
+  animation: thinking-pulse 1s infinite ease-in-out;
+}
+
+.thinking-dots i:nth-child(2) {
+  animation-delay: 0.15s;
+}
+
+.thinking-dots i:nth-child(3) {
+  animation-delay: 0.3s;
+}
+
+@keyframes thinking-pulse {
+  0%,
+  80%,
+  100% {
+    opacity: 0.35;
+    transform: translateY(0);
+  }
+
+  40% {
+    opacity: 1;
+    transform: translateY(-3px);
+  }
 }
 
 .message pre,
@@ -521,18 +562,17 @@ select {
 
 .graph-canvas {
   padding: 24px;
-  display: grid;
-  gap: 12px;
+  overflow: auto;
 }
 
-.graph-step {
+.graph-flow {
   display: grid;
-  grid-template-columns: minmax(180px, 280px) minmax(0, 1fr);
-  align-items: center;
+  justify-items: center;
   gap: 12px;
 }
 
 .graph-node {
+  width: min(100%, 280px);
   min-height: 76px;
   display: grid;
   align-content: center;
@@ -541,6 +581,15 @@ select {
   border: 1px solid #cbd8e3;
   background: #f8fafc;
   padding: 14px;
+}
+
+.graph-node.primary {
+  border-color: #8fb8aa;
+  background: #f1fbf6;
+}
+
+.graph-node.parallel {
+  min-height: 92px;
 }
 
 .graph-node strong {
@@ -553,8 +602,21 @@ select {
 }
 
 .graph-edge {
-  height: 2px;
+  width: 2px;
+  height: 26px;
   background: #94a3b8;
+}
+
+.parallel-stage {
+  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(5, minmax(140px, 1fr));
+  gap: 12px;
+  align-items: stretch;
+}
+
+.parallel-stage .graph-node {
+  width: 100%;
 }
 
 code {
@@ -617,13 +679,7 @@ code {
     grid-template-columns: 1fr;
   }
 
-  .graph-step {
+  .parallel-stage {
     grid-template-columns: 1fr;
-  }
-
-  .graph-edge {
-    width: 2px;
-    height: 24px;
-    margin-left: 24px;
   }
 }

@@ -19,32 +19,44 @@ export default function ChatWindow() {
     const question = input.trim()
     if (!question || isSending) return
 
-    setMessages((current) => [...current, { role: 'user', text: question }])
+    const thinkingId = `thinking-${Date.now()}`
+
+    setMessages((current) => [
+      ...current,
+      { role: 'user', text: question },
+      { id: thinkingId, role: 'assistant', text: 'Thinking...', thinking: true },
+    ])
     setInput('')
     setIsSending(true)
     setError('')
 
     try {
       const response = await sendMessage({ question, mode })
-      setMessages((current) => [
-        ...current,
-        {
-          role: 'assistant',
-          text: response.answer || 'No answer returned.',
-          plan: response.plan,
-          evaluation: response.evaluation,
-          timings: response.timings,
-        },
-      ])
+      setMessages((current) =>
+        current.map((message) =>
+          message.id === thinkingId
+            ? {
+                role: 'assistant',
+                text: response.answer || 'No answer returned.',
+                plan: response.plan,
+                evaluation: response.evaluation,
+                timings: response.timings,
+              }
+            : message
+        )
+      )
     } catch (err) {
       setError(err.message)
-      setMessages((current) => [
-        ...current,
-        {
-          role: 'assistant',
-          text: 'The backend did not respond. Check that FastAPI is running on the configured API URL.',
-        },
-      ])
+      setMessages((current) =>
+        current.map((message) =>
+          message.id === thinkingId
+            ? {
+                role: 'assistant',
+                text: 'The backend did not respond. Check that FastAPI is running on the configured API URL.',
+              }
+            : message
+        )
+      )
     } finally {
       setIsSending(false)
     }
@@ -54,22 +66,41 @@ export default function ChatWindow() {
     const topic = reportTopic.trim() || input.trim()
     if (!topic || isSending) return
 
+    const thinkingId = `report-thinking-${Date.now()}`
+
+    setMessages((current) => [
+      ...current,
+      { id: thinkingId, role: 'assistant', text: 'Preparing report...', thinking: true },
+    ])
     setIsSending(true)
     setError('')
     try {
       const response = await runAutonomousResearch(topic)
-      setMessages((current) => [
-        ...current,
-        {
-          role: 'assistant',
-          text: response.answer,
-          evaluation: response.evaluation,
-          reportPath: response.report_path,
-        },
-      ])
+      setMessages((current) =>
+        current.map((message) =>
+          message.id === thinkingId
+            ? {
+                role: 'assistant',
+                text: response.answer,
+                evaluation: response.evaluation,
+                reportPath: response.report_path,
+              }
+            : message
+        )
+      )
       setReportTopic('')
     } catch (err) {
       setError(err.message)
+      setMessages((current) =>
+        current.map((message) =>
+          message.id === thinkingId
+            ? {
+                role: 'assistant',
+                text: 'The report could not be generated. Check the backend logs for details.',
+              }
+            : message
+        )
+      )
     } finally {
       setIsSending(false)
     }
@@ -79,9 +110,13 @@ export default function ChatWindow() {
     <section className="chat-window">
       <div className="messages">
         {messages.map((message, index) => (
-          <article className={`message ${message.role}`} key={`${message.role}-${index}`}>
+          <article
+            className={`message ${message.role}${message.thinking ? ' thinking' : ''}`}
+            key={message.id || `${message.role}-${index}`}
+          >
             <span>{message.role}</span>
             <p>{message.text}</p>
+            {message.thinking ? <div className="thinking-dots" aria-hidden="true"><i /><i /><i /></div> : null}
             {message.evaluation ? (
               <div className="evaluation-strip">
                 <strong>{Math.round((message.evaluation.confidence || 0) * 100)}% confidence</strong>

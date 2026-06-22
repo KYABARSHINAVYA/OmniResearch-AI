@@ -13,7 +13,8 @@ def search_web(query):
         from tavily import TavilyClient
 
         client = TavilyClient(api_key=api_key)
-        response = client.search(query=query, max_results=5)
+        max_results = int(os.getenv("TAVILY_MAX_RESULTS", "3"))
+        response = client.search(query=query, max_results=max_results)
         return response
     except Exception as exc:
         return {"results": [], "error": str(exc)}

@@ -9,11 +9,16 @@ def writer(
         rag_context,
         memory_context,
         graph_context,
-        mcp_context
+        mcp_context,
+        question=""
 ):
     mcp_context = mcp_context or {}
 
     prompt = f"""
+Question:
+
+{question}
+
 Research:
 
 {research_data}
@@ -38,7 +43,7 @@ Arxiv Papers:
 
 {mcp_context.get("papers", [])}
 
-Generate a detailed answer.
+Generate a clear, useful answer to the question. Be concise unless the question asks for depth.
 """
 
     return invoke_llm(prompt, task="writer")

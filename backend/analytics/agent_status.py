@@ -6,7 +6,8 @@ agent_status = {
     "graph": "idle",
     "mcp": "idle",
     "writer": "idle",
-    "reviewer": "idle"
+    "reviewer": "idle",
+    "evaluator": "idle"
 }
 
 
