@@ -1,8 +1,10 @@
 import { useEffect, useState } from 'react'
 import { getDashboard } from '../api/dashboardApi'
-import AgentStatusCard from '../components/AgentStatusCard'
+import HealthDonut from '../components/HealthDonut'
 import LatencyChart from '../components/LatencyChart'
+import LiveExecutionGraph from '../components/LiveExecutionGraph'
 import LogsPanel from '../components/LogsPanel'
+import MetricTrendCard from '../components/MetricTrendCard'
 import ToolCallsChart from '../components/ToolCallsChart'
 
 const fallbackAgents = {
@@ -33,28 +35,19 @@ export default function Dashboard() {
     <div className="content-stack">
       {error ? <p className="inline-error">Using fallback data: {error}</p> : null}
       <section className="metrics-grid">
-        <div className="metric-card">
-          <span>Token usage</span>
-          <strong>{JSON.stringify(dashboard?.token_usage || 0)}</strong>
-        </div>
-        <div className="metric-card">
-          <span>Memory hits</span>
-          <strong>{JSON.stringify(dashboard?.memory_hits || 0)}</strong>
-        </div>
-        <div className="metric-card">
+        <MetricTrendCard label="Token usage" value={dashboard?.token_usage} accent="green" />
+        <MetricTrendCard label="Memory hits" value={dashboard?.memory_hits} accent="blue" />
+        <MetricTrendCard label="Tool calls" value={dashboard?.tool_calls} accent="amber" />
+        <div className="metric-card signal-card">
           <span>Monitoring</span>
           <strong>Prometheus</strong>
-        </div>
-        <div className="metric-card">
-          <span>Tool families</span>
-          <strong>{Object.keys(dashboard?.tool_calls || {}).length || 4}</strong>
+          <small>Live metrics ready</small>
         </div>
       </section>
 
-      <section className="agent-grid">
-        {Object.entries(agents).map(([agent, status]) => (
-          <AgentStatusCard key={agent} agent={agent} status={String(status)} />
-        ))}
+      <section className="dashboard-hero-grid">
+        <LiveExecutionGraph agents={agents} />
+        <HealthDonut agents={agents} />
       </section>
 
       <section className="two-column">

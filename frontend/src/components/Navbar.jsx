@@ -9,7 +9,7 @@ const pageTitles = {
   settings: 'Settings',
 }
 
-export default function Navbar({ activePage, onNavigate }) {
+export default function Navbar({ activePage, onNavigate, onLogout }) {
   return (
     <header className="topbar">
       <div>
@@ -22,6 +22,9 @@ export default function Navbar({ activePage, onNavigate }) {
         </button>
         <button type="button" className="primary-button" onClick={() => onNavigate('chat')}>
           New research
+        </button>
+        <button type="button" className="ghost-button quiet-button" onClick={onLogout}>
+          Logout
         </button>
       </div>
     </header>

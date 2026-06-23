@@ -14,7 +14,7 @@ router = APIRouter()
 
 class User(BaseModel):
 
-    username: str
+    email: str
 
     password: str
 
@@ -24,7 +24,7 @@ def signup(user: User):
 
     existing_user = users_collection.find_one(
         {
-            "username": user.username
+            "email": user.email
         }
     )
 
@@ -36,7 +36,7 @@ def signup(user: User):
 
     users_collection.insert_one(
         {
-            "username": user.username,
+            "email": user.email,
             "password": hash_password(
                 user.password
             )
@@ -53,7 +53,7 @@ def login(user: User):
 
     existing_user = users_collection.find_one(
         {
-            "username": user.username
+            "email": user.email
         }
     )
 
@@ -74,7 +74,7 @@ def login(user: User):
 
     token = create_access_token(
         {
-            "username": user.username
+            "email": user.email
         }
     )
 

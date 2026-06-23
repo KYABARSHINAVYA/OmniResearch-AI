@@ -10,11 +10,13 @@ async function request(path, options = {}) {
     ...options,
   })
 
+  const data = await response.json()
+
   if (!response.ok) {
-    throw new Error(`Request failed: ${response.status}`)
+    throw new Error(data?.message || `Request failed: ${response.status}`)
   }
 
-  return response.json()
+  return data
 }
 
 export function get(path) {
