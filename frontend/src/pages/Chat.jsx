@@ -1,6 +1,13 @@
 import ChatWindow from '../components/ChatWindow'
 
-export default function Chat() {
+export default function Chat({
+  currentResearch,
+  researchHistory,
+  onArchiveResearch,
+  onNewResearch,
+  onResearchChange,
+  onSelectResearch,
+}) {
   return (
     <div className="content-stack">
       <section className="panel page-intro">
@@ -10,7 +17,14 @@ export default function Chat() {
           answer returns workflow timing, confidence, and hallucination risk.
         </p>
       </section>
-      <ChatWindow />
+      <ChatWindow
+        currentResearch={currentResearch}
+        researchHistory={researchHistory}
+        onArchiveResearch={onArchiveResearch}
+        onNewResearch={onNewResearch}
+        onResearchChange={onResearchChange}
+        onSelectResearch={onSelectResearch}
+      />
     </div>
   )
 }

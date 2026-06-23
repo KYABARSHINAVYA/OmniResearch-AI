@@ -3,7 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field
 from multimodal.multimodal_router import route_input
 
-from memory.sqlite_memory import save_chat
+from memory.sqlite_memory import load_history, save_chat
 from memory.semantic_memory import save_memory
 from fastapi.responses import PlainTextResponse, StreamingResponse
 from graph.workflow import graph
@@ -115,6 +115,20 @@ def chat(data: Query):
         "evaluation": result.get("evaluation"),
         "timings": result.get("timings"),
         "mode": result.get("mode")
+    }
+
+
+@app.get("/chat/history")
+def chat_history():
+    return {
+        "items": [
+            {
+                "id": row[0],
+                "question": row[1],
+                "answer": row[2],
+            }
+            for row in load_history()
+        ]
     }
 from fastapi import UploadFile, File
 import os

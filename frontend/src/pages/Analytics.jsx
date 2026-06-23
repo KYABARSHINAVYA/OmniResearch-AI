@@ -16,10 +16,25 @@ export default function Analytics() {
   return (
     <div className="content-stack">
       {error ? <p className="inline-error">Using fallback data: {error}</p> : null}
-      <section className="metrics-grid">
-        <MetricTrendCard label="Tokens" value={analytics?.token_usage} accent="green" />
-        <MetricTrendCard label="Memory hits" value={analytics?.memory_hits} accent="blue" />
-        <MetricTrendCard label="Tool calls" value={analytics?.tool_calls} accent="amber" />
+      <section className="metrics-grid analytics-metrics">
+        <MetricTrendCard
+          label="Tokens"
+          detail="Usage volume"
+          value={analytics?.token_usage}
+          accent="green"
+        />
+        <MetricTrendCard
+          label="Memory hits"
+          detail="Retrieved context"
+          value={analytics?.memory_hits}
+          accent="blue"
+        />
+        <MetricTrendCard
+          label="Tool calls"
+          detail="Agent actions"
+          value={analytics?.tool_calls}
+          accent="amber"
+        />
       </section>
       <ToolCallsChart toolCalls={analytics?.tool_calls} />
     </div>

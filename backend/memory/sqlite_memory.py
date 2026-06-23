@@ -34,7 +34,7 @@ def save_chat(question, answer):
 def load_history():
 
     cursor.execute(
-        "SELECT question,answer FROM conversations"
+        "SELECT id,question,answer FROM conversations ORDER BY id DESC"
     )
 
     return cursor.fetchall()
