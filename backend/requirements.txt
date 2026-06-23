@@ -18,3 +18,4 @@ playwright
 arxiv
 wikipedia
 python-multipart
+Pillow==11.x.x
