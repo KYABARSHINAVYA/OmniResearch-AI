@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field
-from multimodal.multimodal_router import route_input
+# from multimodal.multimodal_router import route_input
 
 from memory.sqlite_memory import load_history, save_chat
 from memory.semantic_memory import save_memory
@@ -134,62 +134,7 @@ from fastapi import UploadFile, File
 import os
 
 
-@app.post("/multimodal")
-async def multimodal_chat(
-        file: UploadFile = File(...)
-):
 
-    upload_dir = "uploads"
-
-    os.makedirs(
-        upload_dir,
-        exist_ok=True
-    )
-
-    file_path = os.path.join(
-        upload_dir,
-        file.filename
-    )
-
-    with open(
-            file_path,
-            "wb"
-    ) as buffer:
-
-        buffer.write(
-            await file.read()
-        )
-
-    extension = file.filename.split(".")[-1]
-
-    if extension in ["png", "jpg", "jpeg"]:
-
-        extracted_text = route_input(
-            "image",
-            file_path
-        )
-
-    elif extension in ["wav"]:
-
-        extracted_text = route_input(
-            "audio",
-            file_path
-        )
-
-    else:
-
-        extracted_text = "Unsupported file"
-
-    result = graph.invoke(
-        {
-            "question": extracted_text
-        }
-    )
-
-    return {
-        "extracted_text": extracted_text,
-        "answer": result["answer"]
-    }
 @app.post("/chat-stream")
 def chat_stream(data: Query):
 
